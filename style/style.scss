@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&family=Nunito&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: Lexend Deca;
+	font-weight: normal;
+}
+body {
+	padding: 0 0;
+	background-color: wheat;
+	margin: 0 0;
+
+	// &:hover{
+	// 	cursor: url('../cursor_svg/pen-solid.svg') 16 16, auto;
+	// }
+}
+nav {
+	border: 3px solid black;
+	h2 {
+		padding-left: 7px;
+		font-size: 2rem;
+		background-color: rgb(251, 179, 153);
+	}
+}
+section.main{
+	display: flex;
+}
+div.canvas{
+	flex: 1 0 650px;
+	width: 650px;
+// border: 3px solid red;
+	justify-content: center;
+	align-items: center;
+	canvas{
+		border: red solid 3px;
+		width: 100%;
+		height: 100%
+		// width: 85%;
+	}
+}
+
+.tool-box {
+	height: 92vh;
+	// for <hr> to stay still
+	position: relative;
+	hr{
+		position: absolute;
+	}
+	h3{
+		margin: 0 auto;
+		font-size: 1.5rem;
+	}
+	right: 0;
+	width: 300px;
+	overflow-y: scroll;
+
+	// background-color: wheat;
+	border-left:5px solid #6c6c6c;
+	display: flex;
+	flex-direction: column;
+	align-items: center; // for all the button to be in the center
+}
+
+.paint-tool {
+	width: 80%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); 
+    gap: 3px;
+    justify-content: center;
+}
+
+.style-toop{
+	margin-top: 20px;
+	position: absolute;
+	top: 375px;
+}
+.btn-func{
+	border: 2px solid black;
+	padding: 3px;
+	margin: 10px;
+	background-color: white;
+	display: flex;
+	cursor: pointer;
+	justify-content: center;
+	i {
+		font-size: 1.5rem;
+		color : rgb(21, 15, 68);
+		transition: all 0.21s ease;
+		padding: 10px 10px;
+		&:hover{
+			font-size: 1.65rem;
+		}
+	}
+
+	&:hover{
+		background-color: #dfdfdf;
+	}
+}
+
