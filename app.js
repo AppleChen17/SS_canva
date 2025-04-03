@@ -20,8 +20,17 @@ let slideBrush = document.getElementById('sizeSlider');
 let slideOpacity = document.getElementById("opacitySlider");
 let inputFile = document.getElementById('fileInput');
 
+// 圓心 for circle!
+let startX,startY,lastRadius=0;
+let undo_path = [];//for undo
+let redo_path = [];
+let shape_path = []; //for clear shape
 const toolboxWidth = document.querySelector('section.tool-box').offsetWidth;
 const paintToolsList = ["pen","eraser","text","circle","rectangle","triangle"];
+const tempCanvas = document.createElement('canvas');
+tempCanvas.width = canvas.width;
+tempCanvas.height = canvas.height;
+const tempCtx = tempCanvas.getContext('2d');
 
 console.log("toolbox width = " + toolboxWidth);
 // console.log("MouseX = " + mouseX);
@@ -89,7 +98,7 @@ setFontType.addEventListener("change",()=>{
 // input file call handleImage
 // false -> 按照事情冒泡順序而不是捕獲順序做處理 ! 
 // false is default
-inputFile.addEventListener('change', handleImage, false); 
+inputFile.addEventListener('change', LoadImage, false); 
 
 
 canvas.addEventListener('mousedown', (mouse) => {
@@ -97,7 +106,9 @@ canvas.addEventListener('mousedown', (mouse) => {
     const rect = canvas.getBoundingClientRect();
     const x = mouse.clientX - rect.left;
     const y = mouse.clientY - rect.top;
-    
+    startX = x;
+    startY = y;
+    shape_path.push(canvas.toDataURL());
     ctx.beginPath();
     ctx.moveTo(x, y);
 });
@@ -123,15 +134,32 @@ canvas.addEventListener('mousemove', (mouse) => {
             ctx.clearRect(x - brushSize/2, y - brushSize/2, brushSize*2, brushSize*2);
         }
 
-        // else if(paintTool == "text")
-        // {
-            
-        // }
+        // draw circle
+        else if(paintTool == "circle")
+        {
+            // console.log("draw circle");
+            // const dx = x - startX;
+            // const dy = y - startY;
+            // radius = Math.sqrt(dx * dx + dy * dy);
+
+            // if(shape_path.length == 1) shape_path.push(canvas.toDataURL());
+            // restore(shape_path[0]);
+            // ctx.beginPath();
+            // ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+            // ctx.stroke();
+            // shape_path.push(canvas.toDataURL());
+            // // fill in shape?
+            // // ctx.fillStyle = "blue";
+            // // ctx.fill();
+            // lastRadius = radius;
+        }
     }
 });
 
 canvas.addEventListener('mouseup', () => {
+    undo_path.push(canvas.toDataURL());
     isDrawing = false;
+    shape_path = [];
     ctx.beginPath();
 });
 
@@ -142,6 +170,7 @@ function init()
     canvas.height = canvas.offsetHeight;
     ctx.font = `${fontSize} ${fontType}`;
     reset();
+    undo_path.push(canvas.toDataURL());
 }
 
 // click the button
@@ -165,10 +194,10 @@ function onClick(btn)
     else if(btn == "save")
     {
         console.log("save img");
-        let combinedCanvas = document.createElement('canvas');
-        combinedCanvas.width = canvas.width;
-        combinedCanvas.height = canvas.height;
-        let combinedCtx = combinedCanvas.getContext('2d');
+        let combined = document.createElement('canvas');
+        combined.width = canvas.width;
+        combined.height = canvas.height;
+        let combinedCtx = combined.getContext('2d');
     
         combinedCtx.fillStyle = "white";
         combinedCtx.fillRect(0,0,canvas.width,canvas.height);
@@ -187,21 +216,33 @@ function onClick(btn)
         // a tag in <html>
         let link = document.createElement('a');
         link.download = 'masterpiece.png';
-        link.href = combinedCanvas.toDataURL();
+        link.href = combined.toDataURL();
         link.click();
     }
 
     // undo
-    // else if
-    // {
-
-    // }
+    else if(btn == "undo")
+    {
+        // nothing to undo already
+        let len = undo_path.length;
+        if(len == 0) return;
+        let last = undo_path.pop();// js => WOULD return element
+        redo_path.push(last);
+        restore(undo_path[undo_path.length-1]);
+    }
 
     // redo
-    // else if
-    // {
+    else if(btn == "redo")
+    {
+        console.log("redo size = ", redo_path.length);
+        if(redo_path.length == 0) return;
 
-    // }
+        // Move last item from redo_path to undo_path
+        undo_path.push(redo_path.pop());
+    
+        // Restore the last state from undo_path
+        restore(undo_path[undo_path.length - 1]);
+    }
 
     else if(btn == "reset")
     {
@@ -213,7 +254,7 @@ function onClick(btn)
 
 // ref1: https://stackoverflow.com/questions/10906734/how-to-upload-image-into-html5-canvas
 // ref2: https://jsfiddle.net/influenztial/qy7h5/
-function handleImage(e)
+function LoadImage(e)
 {
     /*
     the order of executing the program
@@ -227,6 +268,7 @@ function handleImage(e)
         let img = new Image();
         img.onload = () => {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            undo_path.push(canvas.toDataURL());
         }
         // event.target => is the reader. 
         // so it means that the reader's result (may be base64 or something else)
@@ -250,18 +292,20 @@ function addInput(x,y) // the present mouse position
     let text_input = document.createElement('input');
     text_input.type = 'text';
     text_input.style.position = 'fixed';
-    text_input.style.left = (x) + 'px';
-    text_input.style.top = (y) + 'px';
+    text_input.style.left = x + 'px';
+    text_input.style.top = y + 'px';
 
     text_input.addEventListener('keydown', (e) => {
         let key = e.key;
         // press Enter for ending the input
         if (key === "Enter") {
             // parseInt => 10 base
-            drawText(text_input.value, parseInt(text_input.style.left, 10), parseInt(text_input.style.top, 10));
+            ctx.fillText(text_input.value, x, y);
+
             // take away the input box
             document.body.removeChild(text_input);
             hasInput = false;
+            undo_path.push(canvas.toDataURL());
         }
     });
 
@@ -271,13 +315,18 @@ function addInput(x,y) // the present mouse position
     hasInput = true; // for avoid repeated input place
 }
 
-function drawText(input_text, x, y) {
-    console.log(input_text);
-    // align with top left
-    ctx.textBaseline = 'top';
-    ctx.textAlign = 'left';
-    ctx.fillText(input_text, x, y);
+// go back to a previous state
+function restore(state)
+{
+    console.log("in restore");
+    let screen = new Image();
+    screen.src = state; //return to the previous
+    screen.addEventListener("load",()=>{
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(screen, 0, 0);
+    });
 }
+
 
 // reset
 function reset() 
