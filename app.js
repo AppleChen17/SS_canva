@@ -7,12 +7,14 @@ let paintColor = "red";
 let paintTool = null;
 let isDrawing = false;
 let hasInput = false;
+let filled = false;
 let fontSize = "18px";
 let fontType = "sans-serif";
 let setFontSize = document.getElementById('fontSize');
 let setFontType = document.getElementById("fontType");
 let BG = document.getElementById('background');
 let canvas = document.getElementById('canva-area');
+let checkBox = document.getElementById("filled");
 // could draw 2D objects => ctx = context
 let BGctx = BG.getContext('2d')
 let ctx = canvas.getContext('2d');
@@ -27,10 +29,10 @@ let redo_path = [];
 let shape_path = []; //for clear shape
 const toolboxWidth = document.querySelector('section.tool-box').offsetWidth;
 const paintToolsList = ["pen","eraser","text","circle","rectangle","triangle"];
-const tempCanvas = document.createElement('canvas');
-tempCanvas.width = canvas.width;
-tempCanvas.height = canvas.height;
-const tempCtx = tempCanvas.getContext('2d');
+let tempCanvas;
+// tempCanvas.width = canvas.width;
+// tempCanvas.height = canvas.height;
+// const tempCtx = tempCanvas.getContext('2d');
 
 console.log("toolbox width = " + toolboxWidth);
 // console.log("MouseX = " + mouseX);
@@ -95,6 +97,10 @@ setFontType.addEventListener("change",()=>{
     console.log(ctx.font);
 });
 
+checkBox.addEventListener("change",()=>{
+    filled = (!filled);
+})
+
 // input file call handleImage
 // false -> 按照事情冒泡順序而不是捕獲順序做處理 ! 
 // false is default
@@ -109,6 +115,7 @@ canvas.addEventListener('mousedown', (mouse) => {
     startX = x;
     startY = y;
     shape_path.push(canvas.toDataURL());
+    tempCanvas = ctx.getImageData(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.moveTo(x, y);
 });
@@ -133,25 +140,12 @@ canvas.addEventListener('mousemove', (mouse) => {
         {
             ctx.clearRect(x - brushSize/2, y - brushSize/2, brushSize*2, brushSize*2);
         }
-
-        // draw circle
-        else if(paintTool == "circle")
+        
+        // draw shape !
+        else 
         {
-            // console.log("draw circle");
-            // const dx = x - startX;
-            // const dy = y - startY;
-            // radius = Math.sqrt(dx * dx + dy * dy);
-
-            // if(shape_path.length == 1) shape_path.push(canvas.toDataURL());
-            // restore(shape_path[0]);
-            // ctx.beginPath();
-            // ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-            // ctx.stroke();
-            // shape_path.push(canvas.toDataURL());
-            // // fill in shape?
-            // // ctx.fillStyle = "blue";
-            // // ctx.fill();
-            // lastRadius = radius;
+            // console.log("draw shape !");
+            drawShape(x,y);
         }
     }
 });
@@ -325,6 +319,58 @@ function restore(state)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(screen, 0, 0);
     });
+}
+
+function drawShape(x,y)
+{
+    // for NOT flickering and smoothly draw
+    // also WITHOUT
+    ctx.putImageData(tempCanvas, 0, 0);
+    ctx.lineWidth = brushSize;
+    ctx.beginPath();
+    ctx.fillStyle = paintColor;
+    if(paintTool == "circle")
+    {
+        // this is a img data !!!
+        // console.log("draw circle");
+        const dx = x - startX;
+        const dy = y - startY;
+        radius = Math.sqrt(dx * dx + dy * dy);
+
+        // if(shape_path.length == 1) shape_path.push(canvas.toDataURL());
+        // restore(shape_path[0]);
+        ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+        if(filled) ctx.fill();
+        else ctx.stroke();
+        shape_path.push(canvas.toDataURL());
+        // fill in shape?
+        lastRadius = radius; 
+    }
+
+    // rectangle
+    else if(paintTool == "rectangle")
+    {
+        // this is a img data !!!
+        // console.log("draw rectangle");
+        // rect() => fill
+        if(filled) ctx.fillRect(startX, startY,x-startX,y-startY);
+        else ctx.strokeRect(startX, startY,x-startX,y-startY);
+    }
+
+    // triangle
+    else
+    {
+        // console.log("draw triangle");
+        // now in (x,y), startx,starty
+        ctx.moveTo(startX,startY);
+        ctx.lineTo(x, y);
+        // ctx.lineTo(2*x - startX, 2*y - startY);
+        ctx.lineTo(x - (startY-y),y + (startX-x));
+        // automaticlly connect the line (also ensures proper filling)
+        ctx.closePath();
+        if(filled) ctx.fill();
+        else ctx.stroke();
+    }
 }
 
 
