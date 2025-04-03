@@ -14,6 +14,7 @@
 
     <section class="main">
         <div class="canvas">
+            <canvas id="background"></canvas>
             <canvas id="canva-area">
                 An alternative text describing what your canvas displays.
             </canvas>
@@ -40,10 +41,14 @@
                 <button class="btn-func">
                     <i class="fa-solid fa-caret-up" onclick="onClick('triangle')"></i>
                 </button>
-                <button class="btn-func">
+
+                <!-- file uploading ! -->
+                <input type="file" id="fileInput" style="display: none;">
+                <button class="btn-func" onclick="onClick('upload')">
                     <i class="fa-solid fa-arrow-up-from-bracket"></i>
                 </button>
-                <button class="btn-func">
+                
+                <button class="btn-func" onclick="onClick('save')">
                     <i class="fa-solid fa-download"></i>
                 </button>
 
@@ -62,7 +67,7 @@
                 </button>
             </div>
 
-            <hr style="top: 335px; margin: 5px; border-color: #6C6C6C; border-style: solid; width: 100%;">
+            <hr style="top: 240px; margin: 5px; border-color: #6C6C6C; border-style: solid; width: 100%;">
             <!-- <hr style="border-width: 5px;border-color:  #6C6C6C;border-style: solid; display: block;"> -->
             <!-- brush size, font list -->
             <!-- brush 粗度、顏色透明度、選取顏色 -->
@@ -71,11 +76,36 @@
 
                 <!-- <br> -->
                 <h5>Brush size 🖌️</h5>
-                <input type="range" min="1" max="10" value="5" class="slider" id="sizeSlider">
+                <input type="range" min="1" max="20" value="5" class="slider" id="sizeSlider">
 
                 <!-- <h5>Opacity</h5>
                 <input type="range" min="1" max="100" value="100" class="slider" id="opacitySlider"> -->
+                <br>
+                <h5 style="display: inline;">字型大小</h5>
+                <select id="fontSize">
+                    <option>18</option>
+                    <option>20</option>
+                    <option>22</option>
+                    <option>24</option>
+                    <option>26</option>
+                    <option>28</option>
+                    <option>30</option>
+                </select>
 
+                <h5 style="display: inline;">字體種類</h5>
+                <select id="fontType">
+                    <!-- TODO:modify ! -->
+                    <option>Arial</option>
+                    <option>Impact</option>
+                    <option>Times</option>
+                    <option>Courier New</option>
+                    <option>Copperplate</option>
+                </select>
+
+                <br>
+                <input style="margin-top: 10px;" type="checkbox" id="filled" name="shape_filled"/>
+                <h5 style="display: inline;">Shaped Filled</h5>
+                <!-- <label style="margin-top: 5px;" for="shape_filled">Shape filled</label> -->
             </section>
 
         </section>

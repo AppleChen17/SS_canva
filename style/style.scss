@@ -38,16 +38,26 @@ section.main{
 div.canvas{
 	display:flex;
 	flex: 1 0 800px;
-	border: 3px solid red;
+	// border: 3px solid red;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 
 	canvas{
-		border: red solid 3px;
+		position: absolute;
+		background-color: white;
+		border: black solid 3px;
 		width: 700px;
 		height: 500px;
 		transform: none;
 		display: block;
+
+		#background{
+			z-index:1;
+		}
+		#canva-area{
+			z-index:1;
+		}
 	}
 }
 
@@ -87,28 +97,33 @@ div.canvas{
 	top: 375px; // for position
 	display: flex;
 	align-items: center;
+	h5{
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
 }
 
 .btn-func{
 	border: 2px solid black;
 	padding: 3px;
-	margin: 10px;
+	margin: 6px;
 	background-color: white;
 	display: flex;
 	cursor: pointer;
 	justify-content: center;
 	i {
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 		color : rgb(21, 15, 68);
 		transition: all 0.21s ease;
-		padding: 10px 10px;
-		&:hover{
-			font-size: 1.65rem;
-		}
+		padding: 5px 5px;
+		// &:hover{
+		// 	font: bolder;
+		// }
 	}
 
 	&:hover{
 		background-color: #dfdfdf;
+		border-radius: 20%;
 	}
 }
 
