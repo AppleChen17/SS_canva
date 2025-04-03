@@ -55,10 +55,10 @@
                 <br>
 
                 <button class="btn-func">
-                    <i class="fa-solid fa-rotate-left"></i>
+                    <i class="fa-solid fa-rotate-left" onclick="onClick('undo')"></i>
                 </button>
                 <button class="btn-func">
-                    <i class="fa-solid fa-rotate-right"></i>
+                    <i class="fa-solid fa-rotate-right" onclick="onClick('redo')"></i>
                 </button>
 
                 <!-- refresh -->
@@ -83,23 +83,23 @@
                 <br>
                 <h5 style="display: inline;">字型大小</h5>
                 <select id="fontSize">
-                    <option>18</option>
-                    <option>20</option>
-                    <option>22</option>
-                    <option>24</option>
-                    <option>26</option>
-                    <option>28</option>
-                    <option>30</option>
+                    <!-- value => what it would return back -->
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="22px">22</option>
+                    <option value="24px">24</option>
+                    <option value="26px">26</option>
+                    <option value="28px">28</option>
+                    <option value="30px">30</option>
                 </select>
 
                 <h5 style="display: inline;">字體種類</h5>
                 <select id="fontType">
                     <!-- TODO:modify ! -->
-                    <option>Arial</option>
-                    <option>Impact</option>
-                    <option>Times</option>
-                    <option>Courier New</option>
-                    <option>Copperplate</option>
+                    <option value="Arial">Arial</option>
+                    <option value="sans-serif">sans-serif</option>
+                    <option value="Times">Times</option>
+                    <option value="Courier New">Courier New</option>
                 </select>
 
                 <br>
@@ -107,13 +107,12 @@
                 <h5 style="display: inline;">Shaped Filled</h5>
                 <!-- <label style="margin-top: 5px;" for="shape_filled">Shape filled</label> -->
             </section>
-
         </section>
     </section>
 
 </body>
 </html>
 
-<!-- p5.js library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<!-- p5.js library
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script> -->
 <script src="app.js" defer></script>

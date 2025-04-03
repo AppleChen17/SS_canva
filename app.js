@@ -6,8 +6,11 @@ let paintColor = "red";
 // not selecting any painters now
 let paintTool = null;
 let isDrawing = false;
-let fontSize = 18;
+let hasInput = false;
+let fontSize = "18px";
+let fontType = "sans-serif";
 let setFontSize = document.getElementById('fontSize');
+let setFontType = document.getElementById("fontType");
 let BG = document.getElementById('background');
 let canvas = document.getElementById('canva-area');
 // could draw 2D objects => ctx = context
@@ -55,6 +58,13 @@ canvas.addEventListener('mouseleave', () => {
     document.body.style.cursor = "auto";
 });
 
+// for text input
+// ref: https://stackoverflow.com/questions/21011931/how-to-embed-an-input-or-textarea-in-a-canvas-element
+canvas.addEventListener("click",(e)=>{
+    if(paintTool != "text" || hasInput) return;
+    addInput(e.offsetX, e.offsetY);
+});
+
 // slide for brush size
 slideBrush.addEventListener('change',()=>{
     brushSize = slideBrush.value;
@@ -64,6 +74,16 @@ slideBrush.addEventListener('change',()=>{
 setFontSize.addEventListener("change",()=>{
     fontSize = setFontSize.value;
     console.log("change font size to ",fontSize);
+    ctx.font = `${fontSize} ${fontType}`;
+
+    console.log(ctx.font);
+});
+
+setFontType.addEventListener("change",()=>{
+    fontType = setFontType.value;
+    console.log("change font type to ",fontType);
+    ctx.font = `${fontSize} ${fontType}`;
+    console.log(ctx.font);
 });
 
 // input file call handleImage
@@ -115,15 +135,12 @@ canvas.addEventListener('mouseup', () => {
     ctx.beginPath();
 });
 
-
-init();
-
 // initial function for the whole canva
 function init()
 {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    ctx.font = "20pt Arial";
+    ctx.font = `${fontSize} ${fontType}`;
     reset();
 }
 
@@ -139,6 +156,7 @@ function onClick(btn)
     // upload
     else if(btn == "upload")
     {
+        // hide the <input> and be triggered by the button !
         inputFile.click();
     }
 
@@ -213,13 +231,54 @@ function handleImage(e)
         // event.target => is the reader. 
         // so it means that the reader's result (may be base64 or something else)
         // it would be the source of img.src
+
+        // same pic event.target.result may be same so NOT load again (since may not be triggered)
+        img.src = "";  // clear img.src to ensure that even uploading the same pic it would triggered onload
         img.src = event.target.result;
+        // img.src = event.target.result + "?t=" + Date.now();
     }
 
     // e.target => the one that have this event => <input type="file">! 
     // files[0] to get the first file
     reader.readAsDataURL(e.target.files[0]);  
 }
+
+// for text input
+function addInput(x,y) // the present mouse position
+{
+    // create a html text input element
+    let text_input = document.createElement('input');
+    text_input.type = 'text';
+    text_input.style.position = 'fixed';
+    text_input.style.left = (x) + 'px';
+    text_input.style.top = (y) + 'px';
+
+    text_input.addEventListener('keydown', (e) => {
+        let key = e.key;
+        // press Enter for ending the input
+        if (key === "Enter") {
+            // parseInt => 10 base
+            drawText(text_input.value, parseInt(text_input.style.left, 10), parseInt(text_input.style.top, 10));
+            // take away the input box
+            document.body.removeChild(text_input);
+            hasInput = false;
+        }
+    });
+
+    document.body.appendChild(text_input);
+    // could text-in directly !!
+    text_input.focus();
+    hasInput = true; // for avoid repeated input place
+}
+
+function drawText(input_text, x, y) {
+    console.log(input_text);
+    // align with top left
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+    ctx.fillText(input_text, x, y);
+}
+
 // reset
 function reset() 
 {
@@ -233,3 +292,7 @@ function reset()
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
+
+
+// main
+init();
