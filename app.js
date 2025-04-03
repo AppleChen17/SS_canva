@@ -56,60 +56,45 @@ slideBrush.addEventListener('change',()=>{
     console.log("brushSize = " + brushSize);
 });
 
-// slideOpacity.addEventListener("change",()=>{
-//     opacity = slideOpacity.val / 100; // only have 0 -1
-//     paintColor.setAlpha(opacity);
-//     console.log("opacity = " + opacity);
-// });
-
-// for canvas && drawing
-
-    // 按下滑鼠時開始繪製
 
 canvas.addEventListener('mousedown', (mouse) => {
     isDrawing = true;
     const rect = canvas.getBoundingClientRect();
-    const x = mouse.offsetX-100;
-    const y = mouse.offsetY-30;
+    const x = mouse.clientX - rect.left;
+    const y = mouse.clientY - rect.top;
+    
     ctx.beginPath();
-    ctx.move(x,y);
-    console.log("isDrawing (mousedown):", isDrawing);
+    ctx.moveTo(x, y);
 });
 
-// 放開滑鼠時停止繪製
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
-    console.log("isDrawing (mouseup):", isDrawing);
-});
-
-canvas.addEventListener("mousemove",(mouse) => {
-    if(isDrawing)
-    {
+canvas.addEventListener('mousemove', (mouse) => {
+    if (isDrawing) {
         const rect = canvas.getBoundingClientRect();
-        const x = mouse.offsetX-100;
-        const y = mouse.offsetY-30;
-        ctx.strokeStyle = paintColor;
-        if(paintTool == "pen")
-        {
-            console.log("use pen draw");
-            ctx.lineTo(x, y);
-        }
+        const x = mouse.clientX - rect.left;
+        const y = mouse.clientY - rect.top;
 
-        // actually reneder on the canva
+        ctx.strokeStyle = paintColor;
+        ctx.lineWidth = brushSize;
+        
+        ctx.lineTo(x, y);
+        ctx.moveTo(x, y);
         ctx.stroke();
     }
+});
+
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+    ctx.beginPath();
 });
 
 
 init();
 
-function setup()
-{
-
-}
 // initial function for the whole canva
 function init()
 {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
     reset();
 }
 
@@ -160,4 +145,6 @@ function reset()
     // fill with the background color
     ctx.fillStyle = canvaBG;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = paintColor;
+    ctx.lineWidth = brushSize;
 }
