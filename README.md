@@ -20,7 +20,7 @@
 
 | **Other useful widgets** | **Score** | **Check** |
 | :----------------------- | :-------: | :-------: |
-| Shape filled selector   |   1~5%    |     Y     |
+| Shape filled selector    |   1~5%    |     Y     |
 
 
 ---
@@ -39,7 +39,7 @@
 
 ### Others (Optional)
 
-    Anything you want to say to TAs.
+    非...非常好小畫家 : D
 
 <style>
     table th{

@@ -41,6 +41,7 @@ let step = 0;
 let shape_path = []; //for clear shape
 const toolboxWidth = document.querySelector('section.tool-box').offsetWidth;
 const paintToolsList = ["pen","eraser","text","circle","rectangle","triangle"];
+const shapeList = ["circle","rectangle","triangle"];
 // const hexList = ['A','B','C','D','E','F'];
 // const numList = ['0','1','2','3','4','5','6','7','8','9'];
 // valid hex char
@@ -231,7 +232,7 @@ canvas.addEventListener('mousemove', (mouse) => {
         }
 
         // draw shape !
-        else 
+        else if(shapeList.includes(paintTool))
         {
             // console.log("draw shape !");
             drawShape(x,y);
@@ -241,6 +242,7 @@ canvas.addEventListener('mousemove', (mouse) => {
 
 canvas.addEventListener('mouseup', () => {
     undo_path.push(canvas.toDataURL());
+    step++;
     isDrawing = false;
     shape_path = [];
     ctx.beginPath();
@@ -255,6 +257,7 @@ function init()
     paintTool = null;
     colorPreview.style.backgroundColor = paintColor;
     reset();
+    step++;
     undo_path.push(canvas.toDataURL());
 }
 
@@ -311,9 +314,11 @@ function onClick(btn)
         // nothing to undo already
         let len = undo_path.length;
         if(len == 0) return;
+        step--;
         let last = undo_path.pop();// js => WOULD return element
         redo_path.push(last);
         restore(undo_path[undo_path.length-1]);
+        // restore(undo_path)
     }
 
     // redo
