@@ -20,7 +20,7 @@
 
 | **Other useful widgets** | **Score** | **Check** |
 | :----------------------- | :-------: | :-------: |
-| Name of widgets          |   1~5%    |     N     |
+| Shape filled selector   |   1~5%    |     Y     |
 
 
 ---
@@ -42,7 +42,7 @@
     Anything you want to say to TAs.
 
 <style>
-table th{
-    width: 100%;
-}
+    table th{
+        width: 100%;
+    }
 </style>

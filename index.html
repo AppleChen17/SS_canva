@@ -21,7 +21,7 @@
         </div>
 
         <section class="tool-box">
-            <h4 style="font-size: 1.2rem">paint-tool 🎨</h4>
+            <h4 style="margin-top: 5px; width: 90%; text-align: center; display: block; font-size: 1.2rem; background-color: rgb(251, 179, 153,0.5);">paint-tool</h4>
             <div class="paint-tool">
                 <button class="btn-func" onclick="onClick('pen')">
                     <i class="fa-solid fa-pen"></i>
@@ -67,12 +67,12 @@
                 </button>
             </div>
 
-            <hr style="top: 240px; margin: 5px; border-color: #6C6C6C; border-style: solid; width: 100%;">
+            <hr style="top: 230px; margin: 5px; border-color: #6C6C6C; border-style: solid; width: 100%;">
             <!-- <hr style="border-width: 5px;border-color:  #6C6C6C;border-style: solid; display: block;"> -->
             <!-- brush size, font list -->
             <!-- brush 粗度、顏色透明度、選取顏色 -->
             <section class="style-tool">
-                <h4 style="margin-top: 15px; font-size: 1.2rem; margin-bottom: 5px;">Style</h4>
+                <h4 style="text-align: center; margin-top: 10px; font-size: 1.2rem; margin-bottom: 5px; background-color: rgb(251, 179, 153,0.5);">Style</h4>
 
                 <!-- <br> -->
                 <h5>Brush size 🖌️</h5>
@@ -81,7 +81,7 @@
                 <!-- <h5>Opacity</h5>
                 <input type="range" min="1" max="100" value="100" class="slider" id="opacitySlider"> -->
                 <br>
-                <h5 style="display: inline;">字型大小</h5>
+                <h5 style="display: inline;">Font size</h5>
                 <select id="fontSize">
                     <!-- value => what it would return back -->
                     <option value="18px">18</option>
@@ -93,9 +93,8 @@
                     <option value="30px">30</option>
                 </select>
 
-                <h5 style="display: inline;">字體種類</h5>
+                <h5 style="display: inline;">Font Type</h5>
                 <select id="fontType">
-                    <!-- TODO:modify ! -->
                     <option value="Arial">Arial</option>
                     <option value="sans-serif">sans-serif</option>
                     <option value="Times">Times</option>
@@ -106,6 +105,27 @@
                 <input style="margin-top: 10px;" type="checkbox" id="filled" name="shape_filled"/>
                 <h5 style="display: inline;">Shaped Filled</h5>
                 <!-- <label style="margin-top: 5px;" for="shape_filled">Shape filled</label> -->
+                <br>
+                <h5 style="margin-top: 5px;">Color selector (click me : D)  🎨</h5>
+
+                <div class="colorSelector">
+                    <!-- the preview area -->
+                    <div class="colorPreview" id="colorPreview"></div>
+            
+                    <div class="colorPanel" id="colorPanel">
+                        <div class="colorMap" id="colorMap">
+                            <div class="colorCursor" id="colorCursor">
+                            </div>
+                        </div>
+                        <div class="hueSlider" id="hueSlider">
+                            <div class="hueCursor" id="hueCursor">
+                            </div>
+                        </div>
+
+                        <!-- to first fill it with placeholder -->
+                        <input type="text" class="hexInput" id="hexInput" placeholder="#FF0000">
+                    </div>
+                </div>
             </section>
         </section>
     </section>
