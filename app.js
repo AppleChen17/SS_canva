@@ -401,7 +401,8 @@ function addInput(x,y) // the present mouse position
     text_input.addEventListener('keydown', (e) => {
         let key = e.key;
         // press Enter for ending the input
-        if (key === "Enter") {
+        if (key === "Enter") 
+        {
             ctx.fillStyle = paintColor;
             // parseInt => 10 base
             ctx.fillText(text_input.value, x, y);
